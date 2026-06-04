@@ -1,0 +1,1639 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>KI-Einsatz sinnvoll?</title>
+  <style>
+    :root {
+      --bg: #f4f6f8;
+      --card: #ffffff;
+      --text: #1f2937;
+      --muted: #6b7280;
+      --border: #d8dee6;
+      --primary: #2457c5;
+      --primary-dark: #1d46a0;
+      --green-bg: #dcfce7;
+      --green-text: #14532d;
+      --yellow-bg: #fef3c7;
+      --yellow-text: #78350f;
+      --red-bg: #fee2e2;
+      --red-text: #7f1d1d;
+      --blue-bg: #dbeafe;
+      --blue-text: #1e3a8a;
+      --purple-bg: #ede9fe;
+      --purple-text: #4c1d95;
+      --shadow: 0 18px 45px rgba(15, 23, 42, 0.09);
+      --radius: 18px;
+    }
+
+    * {
+      box-sizing: border-box;
+    }
+
+    body {
+      margin: 0;
+      font-family: system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+      color: var(--text);
+      background:
+        radial-gradient(circle at top left, #e0ebff 0, transparent 34%),
+        linear-gradient(135deg, #f7f9fc 0%, #eef2f7 100%);
+      min-height: 100vh;
+      padding: 28px;
+    }
+
+    .app {
+      max-width: 1240px;
+      margin: 0 auto;
+    }
+
+    header {
+      text-align: center;
+      margin-bottom: 22px;
+    }
+
+    .eyebrow {
+      display: inline-flex;
+      gap: 8px;
+      align-items: center;
+      padding: 6px 12px;
+      border-radius: 999px;
+      background: var(--blue-bg);
+      color: var(--blue-text);
+      font-size: 0.88rem;
+      font-weight: 750;
+      margin-bottom: 10px;
+    }
+
+    h1 {
+      margin: 0;
+      font-size: clamp(1.8rem, 3vw, 3rem);
+      letter-spacing: -0.04em;
+      color: #10203d;
+    }
+
+    .subtitle {
+      max-width: 820px;
+      margin: 12px auto 0;
+      color: var(--muted);
+      line-height: 1.55;
+      font-size: 1.02rem;
+    }
+
+    .grid {
+      display: grid;
+      grid-template-columns: minmax(340px, 0.88fr) minmax(360px, 1.12fr);
+      gap: 22px;
+      align-items: start;
+    }
+
+    .card {
+      background: rgba(255, 255, 255, 0.94);
+      border: 1px solid rgba(216, 222, 230, 0.9);
+      border-radius: var(--radius);
+      box-shadow: var(--shadow);
+      padding: 22px;
+      backdrop-filter: blur(10px);
+    }
+
+    .sticky {
+      position: sticky;
+      top: 18px;
+    }
+
+    .card h2 {
+      font-size: 1.1rem;
+      margin: 0 0 14px;
+      color: #13213a;
+    }
+
+    .form-group {
+      margin-bottom: 16px;
+    }
+
+    label.form-label {
+      display: flex;
+      justify-content: space-between;
+      gap: 12px;
+      font-weight: 750;
+      margin-bottom: 7px;
+      font-size: 0.94rem;
+    }
+
+    label.form-label span {
+      color: var(--muted);
+      font-weight: 550;
+      font-size: 0.82rem;
+    }
+
+    input[type="text"],
+    textarea,
+    select {
+      width: 100%;
+      border: 1px solid var(--border);
+      border-radius: 12px;
+      padding: 11px 12px;
+      font-size: 0.98rem;
+      color: var(--text);
+      background: #fff;
+      outline: none;
+      transition: 0.16s ease;
+    }
+
+    textarea {
+      min-height: 84px;
+      resize: vertical;
+    }
+
+    input:focus,
+    textarea:focus,
+    select:focus {
+      border-color: var(--primary);
+      box-shadow: 0 0 0 4px rgba(36, 87, 197, 0.12);
+    }
+
+    .inline-options {
+      display: grid;
+      grid-template-columns: repeat(2, 1fr);
+      gap: 9px;
+      margin-top: 6px;
+    }
+
+    .pill-option {
+      border: 1px solid var(--border);
+      border-radius: 14px;
+      padding: 10px;
+      background: #fff;
+      cursor: pointer;
+      transition: 0.16s ease;
+      display: flex;
+      gap: 8px;
+      align-items: flex-start;
+      font-size: 0.9rem;
+      line-height: 1.3;
+    }
+
+    .pill-option:hover {
+      border-color: #9bb4f1;
+      background: #f7faff;
+    }
+
+    .pill-option input {
+      margin-top: 2px;
+      accent-color: var(--primary);
+      min-width: 14px;
+    }
+
+    .button-row {
+      display: flex;
+      gap: 10px;
+      flex-wrap: wrap;
+      margin-top: 18px;
+    }
+
+    button {
+      border: none;
+      border-radius: 14px;
+      padding: 12px 15px;
+      font-weight: 800;
+      font-size: 0.96rem;
+      cursor: pointer;
+      transition: 0.16s ease;
+    }
+
+    .primary {
+      background: var(--primary);
+      color: white;
+      flex: 1;
+    }
+
+    .primary:hover {
+      background: var(--primary-dark);
+      transform: translateY(-1px);
+    }
+
+    .secondary {
+      background: #eef2f7;
+      color: #243047;
+    }
+
+    .secondary:hover {
+      background: #e1e7ef;
+    }
+
+    .result-empty {
+      color: var(--muted);
+      line-height: 1.55;
+      padding: 18px;
+      border: 1px dashed var(--border);
+      border-radius: 16px;
+      background: #fafbfc;
+    }
+
+    .verdict {
+      border-radius: 18px;
+      padding: 18px;
+      margin-bottom: 16px;
+      border: 1px solid transparent;
+    }
+
+    .verdict h2 {
+      margin: 0 0 6px;
+      font-size: 1.35rem;
+    }
+
+    .verdict p {
+      margin: 0;
+      line-height: 1.55;
+      font-weight: 560;
+    }
+
+    .success {
+      background: var(--green-bg);
+      color: var(--green-text);
+      border-color: #bbf7d0;
+    }
+
+    .warning {
+      background: var(--yellow-bg);
+      color: var(--yellow-text);
+      border-color: #fde68a;
+    }
+
+    .danger {
+      background: var(--red-bg);
+      color: var(--red-text);
+      border-color: #fecaca;
+    }
+
+    .info-box {
+      background: #f8fafc;
+      border: 1px solid var(--border);
+      border-radius: 16px;
+      padding: 14px;
+      margin-top: 12px;
+    }
+
+    .info-box.purple {
+      background: var(--purple-bg);
+      border-color: #ddd6fe;
+      color: var(--purple-text);
+    }
+
+    .score-wrap {
+      margin: 16px 0 18px;
+    }
+
+    .score-line {
+      display: flex;
+      justify-content: space-between;
+      align-items: baseline;
+      margin-bottom: 8px;
+      gap: 12px;
+    }
+
+    .score-line strong {
+      font-size: 1.05rem;
+    }
+
+    .bar {
+      height: 14px;
+      background: #e5e7eb;
+      border-radius: 999px;
+      overflow: hidden;
+    }
+
+    .bar-fill {
+      height: 100%;
+      width: 0%;
+      background: linear-gradient(90deg, #ef4444, #f59e0b, #22c55e);
+      border-radius: inherit;
+      transition: width 0.35s ease;
+    }
+
+    .section {
+      border-top: 1px solid var(--border);
+      padding-top: 14px;
+      margin-top: 14px;
+    }
+
+    .section h3 {
+      margin: 0 0 8px;
+      font-size: 1.02rem;
+      color: #13213a;
+      display: flex;
+      gap: 8px;
+      align-items: center;
+    }
+
+    ul {
+      margin: 0;
+      padding-left: 1.15rem;
+    }
+
+    li {
+      margin: 6px 0;
+      line-height: 1.45;
+    }
+
+    .chips {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 8px;
+      margin-top: 8px;
+    }
+
+    .chip {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      border-radius: 999px;
+      padding: 6px 10px;
+      background: #eef2ff;
+      color: #283773;
+      font-size: 0.83rem;
+      font-weight: 750;
+    }
+
+    .phase-grid {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 10px;
+      margin-top: 8px;
+    }
+
+    .phase-card {
+      border: 1px solid var(--border);
+      background: #fff;
+      border-radius: 16px;
+      padding: 12px;
+      line-height: 1.45;
+      min-height: 120px;
+    }
+
+    .phase-card strong {
+      display: block;
+      margin-bottom: 5px;
+      color: #13213a;
+    }
+
+    .copy-box {
+      background: #f8fafc;
+      border: 1px solid var(--border);
+      border-radius: 14px;
+      padding: 12px;
+      white-space: pre-wrap;
+      line-height: 1.5;
+      font-size: 0.93rem;
+    }
+
+    .prompt-box {
+      background: #111827;
+      color: #f9fafb;
+      border-radius: 14px;
+      padding: 14px;
+      white-space: pre-wrap;
+      line-height: 1.55;
+      font-size: 0.92rem;
+      border: 1px solid #374151;
+    }
+
+    .small-note {
+      font-size: 0.85rem;
+      color: var(--muted);
+      line-height: 1.45;
+      margin-top: 10px;
+    }
+
+    .mini-heading {
+      font-weight: 800;
+      margin: 0 0 7px;
+      color: #13213a;
+    }
+
+    .two-col {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 10px;
+    }
+
+    @media (max-width: 940px) {
+      body {
+        padding: 16px;
+      }
+
+      .grid {
+        grid-template-columns: 1fr;
+      }
+
+      .sticky {
+        position: static;
+      }
+
+      .inline-options,
+      .phase-grid,
+      .two-col {
+        grid-template-columns: 1fr;
+      }
+    }
+
+    @media print {
+      body {
+        background: #fff;
+        padding: 0;
+      }
+
+      header,
+      .input-card,
+      .button-row,
+      .small-note {
+        display: none !important;
+      }
+
+      .grid {
+        display: block;
+      }
+
+      .card {
+        box-shadow: none;
+        border: none;
+      }
+
+      .app {
+        max-width: 100%;
+      }
+
+      .phase-grid,
+      .two-col {
+        grid-template-columns: 1fr 1fr 1fr;
+      }
+
+      .prompt-box {
+        background: #fff;
+        color: #111827;
+        border: 1px solid #999;
+      }
+    }
+  </style>
+</head>
+<body>
+  <main class="app">
+    <header>
+      <div class="eyebrow">🧭 Planungscoach für lernwirksamen KI-Einsatz</div>
+      <h1>KI-Einsatz sinnvoll?</h1>
+      <p class="subtitle">
+        Diese Mini-App prüft nicht nur, ob ein KI-Einsatz plausibel ist. Sie hilft auch dabei, die Idee so umzubauen, dass Schülerinnen und Schüler selbst denken, entscheiden, überarbeiten und ihre Eigenleistung sichtbar machen.
+      </p>
+    </header>
+
+    <section class="grid">
+      <div class="card input-card sticky">
+        <h2>1. Geplanten Einsatz beschreiben</h2>
+
+        <div class="form-group">
+          <label class="form-label" for="ziel">Unterrichtsziel <span>Was soll gelernt werden?</span></label>
+          <textarea id="ziel" placeholder="z. B. eine faire Reaktion auf einen Social-Media-Post formulieren, eine Argumentation überarbeiten, eine Marketingentscheidung begründen ..."></textarea>
+        </div>
+
+        <div class="form-group">
+          <label class="form-label" for="focus">Fachlicher Schwerpunkt <span>Was darf KI nicht verdecken?</span></label>
+          <select id="focus">
+            <option value="sprache">Sprache / Schreiben / Sprechen</option>
+            <option value="entscheidung">fachliche Entscheidung / Begründung</option>
+            <option value="recherche">Recherche / Quellenarbeit</option>
+            <option value="visualisierung">Visualisierung / Kreativprodukt</option>
+            <option value="feedback">Feedback / Überarbeitung</option>
+            <option value="verstehen">Verstehen / Erklären / Anwenden</option>
+          </select>
+        </div>
+
+        <div class="form-group">
+          <label class="form-label" for="support">KI-Unterstützung im Verlauf <span>Wann tritt KI zurück?</span></label>
+          <select id="support">
+            <option value="punktuell">punktuell: KI hilft an einer klar begrenzten Stelle</option>
+            <option value="fading">abnehmend: KI hilft zuerst stärker und tritt dann zurück</option>
+            <option value="durchgehend">durchgehend: KI ist in jeder Phase stark präsent</option>
+            <option value="unklar">unklar: noch nicht festgelegt</option>
+          </select>
+        </div>
+
+        <div class="form-group">
+          <label class="form-label" for="phase">Unterrichtsphase</label>
+          <select id="phase">
+            <option value="einstieg">Einstieg / Motivation</option>
+            <option value="aktivierung">Aktivierung von Vorwissen</option>
+            <option value="erarbeitung">Erarbeitung</option>
+            <option value="uebung">Übung / Anwendung</option>
+            <option value="feedback">Feedback / Überarbeitung</option>
+            <option value="transfer">Transfer</option>
+            <option value="sicherung">Sicherung</option>
+            <option value="bewertung">Bewerteter Leistungsnachweis</option>
+          </select>
+        </div>
+
+        <div class="form-group">
+          <label class="form-label" for="sozialform">Sozialform</label>
+          <select id="sozialform">
+            <option value="einzel">Einzelarbeit</option>
+            <option value="partner">Partnerarbeit</option>
+            <option value="gruppe">Gruppenarbeit</option>
+            <option value="plenum">Plenum</option>
+            <option value="station">Stationen / Selbstlernphase</option>
+          </select>
+        </div>
+
+        <div class="form-group">
+          <label class="form-label" for="rolle">KI-Rolle</label>
+          <select id="rolle">
+            <option value="coach">Coach / Tutor: stellt Fragen, gibt Hinweise, erklärt dosiert</option>
+            <option value="feedback">Feedbackgeber: prüft Entwürfe, gibt Feed-forward</option>
+            <option value="sparring">Sparringspartner: simuliert Rolle, Gegenposition, Gespräch</option>
+            <option value="struktur">Strukturhilfe: ordnet Ideen, macht Kriterien sichtbar</option>
+            <option value="generator">Generator: erstellt fertigen Text, Bild, Lösung oder Produkt</option>
+            <option value="korrektur">Korrekturautomat: verbessert Sprache oder Fehler</option>
+            <option value="recherche">Recherchehilfe: sammelt Informationen oder Quellen</option>
+          </select>
+        </div>
+
+        <div class="form-group">
+          <label class="form-label" for="eigenleistung">Was machen die Schülerinnen und Schüler selbst? <span>eigener Denk- und Arbeitsanteil</span></label>
+          <select id="eigenleistung">
+            <option value="hoch">Viel: zuerst selbst denken/schreiben, dann prüfen, begründen, überarbeiten</option>
+            <option value="mittel">Teilweise: auswählen, anpassen, kurze Begründungen geben</option>
+            <option value="gering">Wenig: vor allem lesen, übernehmen oder KI-Ergebnisse verwenden</option>
+          </select>
+        </div>
+
+        <div class="form-group">
+          <label class="form-label" for="produkt">Endprodukt / Nachweis</label>
+          <select id="produkt">
+            <option value="eigener_entwurf">Eigenen Entwurf plus Überarbeitung</option>
+            <option value="prozess">Prozessdokumentation / Reflexion / Begründung</option>
+            <option value="vergleich">Vergleich mehrerer Lösungen mit Entscheidung</option>
+            <option value="ki_output">KI-Output als fertiges Produkt</option>
+            <option value="kein_produkt">Kein sichtbares Produkt</option>
+          </select>
+        </div>
+
+        <div class="form-group">
+          <label class="form-label">Sichtbare Schülerleistung <span>Mehrfachauswahl</span></label>
+          <div class="inline-options">
+            <label class="pill-option"><input type="checkbox" name="visible" value="firstDraft" checked /> eigener Erstentwurf vor KI-Nutzung</label>
+            <label class="pill-option"><input type="checkbox" name="visible" value="revision" checked /> markierte Überarbeitung nach KI-Feedback</label>
+            <label class="pill-option"><input type="checkbox" name="visible" value="explanation" /> Begründung: Was wurde übernommen, geändert oder verworfen?</label>
+            <label class="pill-option"><input type="checkbox" name="visible" value="reflection" /> kurze Reflexion / Exit-Ticket</label>
+            <label class="pill-option"><input type="checkbox" name="visible" value="comparison" /> Vergleich eigener Lösung mit KI-Vorschlag</label>
+            <label class="pill-option"><input type="checkbox" name="visible" value="decision" /> Entscheidungen dokumentiert: übernommen, geändert, verworfen</label>
+            <label class="pill-option"><input type="checkbox" name="visible" value="intermediate" /> Zwischenprodukte / Versionen sind sichtbar</label>
+            <label class="pill-option"><input type="checkbox" name="visible" value="oral" /> mündliche Erklärung oder Nachfrage möglich</label>
+          </div>
+        </div>
+
+        <div class="form-group">
+          <label class="form-label">Didaktische Leitplanken <span>Mehrfachauswahl</span></label>
+          <div class="inline-options">
+            <label class="pill-option"><input type="checkbox" name="guideline" value="criteria" checked /> klare Kriterien / Rubrik sind vorhanden</label>
+            <label class="pill-option"><input type="checkbox" name="guideline" value="transparent" /> KI-Nutzung wird sichtbar dokumentiert</label>
+            <label class="pill-option"><input type="checkbox" name="guideline" value="peer" /> Austausch mit Partner, Gruppe oder Plenum ist geplant</label>
+            <label class="pill-option"><input type="checkbox" name="guideline" value="revision" checked /> Überarbeitung nach Feedback ist verpflichtend</label>
+            <label class="pill-option"><input type="checkbox" name="guideline" value="limits" /> KI darf keine fertige Lösung liefern</label>
+            <label class="pill-option"><input type="checkbox" name="guideline" value="teacher" /> Lehrkraft prüft/rahmt das Ergebnis</label>
+          </div>
+        </div>
+
+        <div class="button-row">
+          <button class="primary" onclick="evaluateUse()">Einsatz einschätzen</button>
+          <button class="secondary" onclick="resetForm()">Zurücksetzen</button>
+        </div>
+
+        <p class="small-note">
+          Tipp für Fortbildungen: Die App eignet sich gut, um aus einer ersten „KI-Idee“ gemeinsam eine lernwirksame Unterrichtsplanung zu machen.
+        </p>
+      </div>
+
+      <div class="card">
+        <h2>2. Auswertung und Planungsfeedback</h2>
+        <div id="result" class="result-empty">
+          Fülle links die Felder aus und klicke auf „Einsatz einschätzen“. Danach erhältst du Ampel, Begründung, Planungsfeedback, einen möglichen Schülerauftrag und konkrete Umbauvorschläge.
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <script>
+    const $ = (id) => document.getElementById(id);
+
+    const phaseLabels = {
+      einstieg: 'Einstieg / Motivation',
+      aktivierung: 'Aktivierung von Vorwissen',
+      erarbeitung: 'Erarbeitung',
+      uebung: 'Übung / Anwendung',
+      feedback: 'Feedback / Überarbeitung',
+      transfer: 'Transfer',
+      sicherung: 'Sicherung',
+      bewertung: 'Bewerteter Leistungsnachweis'
+    };
+
+    const roleLabels = {
+      coach: 'Coach / Tutor',
+      feedback: 'Feedbackgeber',
+      sparring: 'Sparringspartner',
+      struktur: 'Strukturhilfe',
+      generator: 'Generator',
+      korrektur: 'Korrekturautomat',
+      recherche: 'Recherchehilfe'
+    };
+
+    const focusLabels = {
+      sprache: 'Sprache / Schreiben / Sprechen',
+      entscheidung: 'fachliche Entscheidung / Begründung',
+      recherche: 'Recherche / Quellenarbeit',
+      visualisierung: 'Visualisierung / Kreativprodukt',
+      feedback: 'Feedback / Überarbeitung',
+      verstehen: 'Verstehen / Erklären / Anwenden'
+    };
+
+    const supportLabels = {
+      punktuell: 'punktuelle KI-Hilfe',
+      fading: 'KI-Hilfe tritt zurück',
+      durchgehend: 'durchgehend starke KI-Hilfe',
+      unklar: 'unklare KI-Rolle im Verlauf'
+    };
+
+    const productLabels = {
+      eigener_entwurf: 'Eigener Entwurf plus Überarbeitung',
+      prozess: 'Prozessdokumentation / Reflexion / Begründung',
+      vergleich: 'Vergleich mehrerer Lösungen mit Entscheidung',
+      ki_output: 'KI-Output als fertiges Produkt',
+      kein_produkt: 'Kein sichtbares Produkt'
+    };
+
+    function getChecked(name) {
+      return Array.from(document.querySelectorAll(`input[name="${name}"]:checked`)).map(cb => cb.value);
+    }
+
+    function unique(arr) {
+      return [...new Set(arr.filter(Boolean))];
+    }
+
+    function sentenceList(items, max = 6) {
+      return unique(items).slice(0, max).map(item => `<li>${item}</li>`).join('');
+    }
+
+    function evaluateUse() {
+      const ziel = $('ziel').value.trim();
+      const focus = $('focus').value;
+      const support = $('support').value;
+      const phase = $('phase').value;
+      const sozialform = $('sozialform').value;
+      const rolle = $('rolle').value;
+      const eigenleistung = $('eigenleistung').value;
+      const produkt = $('produkt').value;
+      const guidelines = getChecked('guideline');
+      const visible = getChecked('visible');
+
+      let score = 50;
+      const reasons = [];
+      const risks = [];
+      const upgrades = [];
+      const tags = [];
+      const booster = [];
+      const toolShowSigns = [];
+      const visibleFeedback = [];
+      const planningPrinciples = [];
+
+      // Eigenleistung
+      if (eigenleistung === 'hoch') {
+        score += 24;
+        reasons.push('Der eigene Denk- und Arbeitsanteil ist stark angelegt: Die Lernenden prüfen, begründen, überarbeiten oder reflektieren. Das spricht für echte kognitive Aktivierung.');
+        tags.push('hohe Eigenleistung');
+      } else if (eigenleistung === 'mittel') {
+        score += 8;
+        reasons.push('Es gibt eine aktive Rolle der Lernenden, sie bleibt aber noch relativ stark an Auswahl, Prompting oder Anpassung gebunden.');
+        risks.push('Die Lernenden könnten KI-Vorschläge übernehmen, ohne fachlich tief genug zu prüfen.');
+        upgrades.push('Ergänze eine verpflichtende Begründung: Was wurde übernommen, geändert oder verworfen und warum?');
+        tags.push('mittlere Eigenleistung');
+      } else {
+        score -= 30;
+        risks.push('Die Lernenden könnten vor allem KI-Ergebnisse lesen, übernehmen oder verwalten. Dann bleibt der Einsatz didaktisch oberflächlich.');
+        upgrades.push('Baue zuerst einen eigenen Denkversuch ein: Erstentwurf, Vermutung, Lösungsskizze oder erste Argumente vor der KI-Nutzung.');
+        toolShowSigns.push('Die KI erledigt den sichtbaren Hauptteil, während Schülerinnen und Schüler eher zuschauen oder übernehmen.');
+        tags.push('geringe Eigenleistung');
+      }
+
+      // Fachlicher Schwerpunkt
+      if (focus === 'sprache') {
+        tags.push('Sprachleistung im Blick');
+        if (rolle === 'generator' || rolle === 'korrektur') {
+          score -= 10;
+          risks.push('Im Sprachunterricht kann KI die eigentliche Sprachproduktion verdecken, wenn Formulierungen zu stark vom Tool kommen.');
+          upgrades.push('Lass die Lernenden zuerst selbst formulieren und danach nur gezielt Feedback, Alternativen oder Rückfragen der KI nutzen.');
+          warningSigns.push('Schülerinnen und Schüler bedienen das Tool, aber die eigene Sprachproduktion bleibt zu wenig sichtbar.');
+        } else {
+          score += 5;
+          reasons.push('Der fachliche Schwerpunkt Sprache bleibt besser sichtbar, wenn KI als Coach, Sparringspartner oder Feedbackgeber genutzt wird.');
+        }
+      }
+
+      if (focus === 'entscheidung') {
+        score += 4;
+        tags.push('Entscheidungen sichtbar');
+        upgrades.push('Plane eine kurze Entscheidungsnotiz ein: Was übernehmen wir, was ändern wir, was verwerfen wir und warum?');
+      }
+
+      if (focus === 'recherche') {
+        tags.push('Quellenarbeit');
+        if (rolle !== 'recherche') {
+          upgrades.push('Wenn Recherche im Mittelpunkt steht, sollte ein Quellencheck oder Lateral Reading ausdrücklich eingeplant werden.');
+        }
+        risks.push('Bei KI-gestützter Recherche muss sichtbar bleiben, welche Informationen geprüft wurden und welche offen oder unsicher sind.');
+      }
+
+      if (focus === 'visualisierung') {
+        tags.push('Visualisierung');
+        reasons.push('Visualisierungen können lernwirksam sein, wenn sie einen Denkprozess sichtbar machen und nicht nur ein schönes Produkt erzeugen.');
+        upgrades.push('Lass die Lernenden erklären, welche fachliche Idee die Visualisierung zeigt und wo ihre Grenzen liegen.');
+      }
+
+      if (focus === 'verstehen') {
+        tags.push('Verstehen im Fokus');
+        upgrades.push('Baue eine kurze Anwendung ohne KI ein, damit sichtbar wird, ob das Erklärte verstanden wurde.');
+      }
+
+      if (focus === 'feedback') {
+        score += 5;
+        tags.push('Feedback im Fokus');
+        reasons.push('Wenn Feedback und Überarbeitung im Mittelpunkt stehen, kann KI besonders gut als Lernbegleiter eingesetzt werden.');
+      }
+
+      // Verlauf der KI-Unterstützung
+      if (support === 'punktuell') {
+        score += 10;
+        reasons.push('Die KI-Hilfe ist punktuell begrenzt. Das schützt die Eigenleistung und erleichtert die Planung.');
+        planningPrinciples.push('KI öffnet an einer klaren Stelle eine Hilfe, übernimmt aber nicht den ganzen Lernprozess.');
+        tags.push('punktuelle Hilfe');
+      }
+
+      if (support === 'fading') {
+        score += 16;
+        reasons.push('Sehr stark: Die KI hilft zunächst, tritt dann aber zugunsten der Eigenleistung zurück.');
+        planningPrinciples.push('Hilfen öffnen und dann zurücktreten: Die Lernenden nutzen KI-Unterstützung, müssen danach aber selbst weiterarbeiten.');
+        tags.push('Hilfe tritt zurück');
+      }
+
+      if (support === 'durchgehend') {
+        score -= 18;
+        risks.push('Wenn KI in jeder Phase stark präsent ist, kann sie den Lernprozess zu sehr überlagern.');
+        upgrades.push('Lege fest, in welcher Phase die KI bewusst zurücktritt, z. B. bei Endfassung, Begründung, Präsentation oder Transfer.');
+        warningSigns.push('Die KI hat in jeder Phase dieselbe oder eine zu dominante Funktion.');
+        tags.push('durchgehend kritisch');
+      }
+
+      if (support === 'unklar') {
+        score -= 10;
+        risks.push('Noch unklar ist, wann die KI hilft und wann sie zugunsten der Eigenleistung zurücktritt.');
+        upgrades.push('Plane die KI-Rolle im Verlauf: zuerst Unterstützung, dann eigenständige Anwendung, Entscheidung oder Reflexion.');
+        warningSigns.push('Es ist nicht festgelegt, wann KI-Hilfe endet und Eigenleistung beginnt.');
+        tags.push('Verlauf unklar');
+      }
+
+      // KI-Rolle
+      if (rolle === 'coach' || rolle === 'feedback' || rolle === 'sparring') {
+        score += 18;
+        reasons.push('Die KI übernimmt eine begleitende Rolle. Das ist didaktisch günstiger als ein fertiger Output, weil Denkprozesse, Rückfragen und Überarbeitung im Mittelpunkt stehen können.');
+        tags.push('KI als Lernbegleiter');
+      }
+
+      if (rolle === 'struktur') {
+        score += 10;
+        reasons.push('Als Strukturhilfe kann KI entlasten, ohne automatisch die fachliche Entscheidung zu übernehmen.');
+        upgrades.push('Lass die Lernenden die Struktur prüfen, ergänzen und an Kriterien messen.');
+        tags.push('Strukturhilfe');
+      }
+
+      if (rolle === 'recherche') {
+        score += 2;
+        reasons.push('Recherche kann sinnvoll sein, braucht aber unbedingt Quellenkritik, Plausibilitätsprüfung und transparente Auswahlentscheidungen.');
+        risks.push('Bei Recherche drohen Halluzinationen, oberflächliches Kopieren und fehlende Quellenprüfung.');
+        upgrades.push('Verpflichte die Lernenden zu Quellenvergleich, Lateral Reading oder einem kurzen Quellencheck.');
+        tags.push('Quellenprüfung nötig');
+      }
+
+      if (rolle === 'generator') {
+        score -= 22;
+        risks.push('Ein Generator kann die eigentliche Schülerleistung ersetzen, wenn kein eigener Entwurf und keine kritische Prüfung verlangt werden.');
+        upgrades.push('Nutze den KI-Output nicht als Endprodukt, sondern als Vergleichsmaterial: Was ist stark, schwach, unpassend, zu glatt oder fachlich problematisch?');
+        toolShowSigns.push('Der Wow-Effekt des KI-Outputs könnte wichtiger werden als der eigentliche Lernprozess.');
+        tags.push('Generator-Risiko');
+      }
+
+      if (rolle === 'korrektur') {
+        score -= 6;
+        reasons.push('Sprach- oder Fehlerkorrektur kann helfen, wenn daraus eine echte Überarbeitung entsteht.');
+        risks.push('Wenn nur automatisch verbessert wird, verschwindet die Lernchance. Die Lernenden müssen Änderungen verstehen.');
+        upgrades.push('Lass drei KI-Korrekturen markieren und erklären: Was wurde geändert und warum?');
+        tags.push('Korrektur nur mit Reflexion');
+      }
+
+      // Phase
+      if (phase === 'feedback') {
+        score += 18;
+        reasons.push('Die Feedback- und Überarbeitungsphase ist besonders geeignet, weil KI hier Lernprozesse sichtbar machen kann, ohne das Produkt vollständig zu ersetzen.');
+        tags.push('Feedbackphase');
+      }
+
+      if (phase === 'transfer') {
+        score += 10;
+        reasons.push('Im Transfer kann KI neue Perspektiven, Rollen oder Gegenpositionen einbringen. Entscheidend bleibt, dass die Lernenden selbst entscheiden und begründen.');
+        tags.push('Transfer');
+      }
+
+      if (phase === 'einstieg' && rolle === 'generator') {
+        score -= 12;
+        risks.push('Ein generativer Wow-Effekt im Einstieg kann motivieren, bleibt aber schnell oberflächlich, wenn danach keine klare Lernhandlung folgt.');
+        upgrades.push('Formuliere direkt nach dem Einstieg eine Denkaufgabe: Was fällt auf? Was ist fragwürdig? Was müssen wir prüfen?');
+      }
+
+      if (phase === 'sicherung' && rolle === 'generator') {
+        score -= 16;
+        risks.push('In der Sicherung sollte nicht die KI das Ergebnis herstellen. Sonst wird unklar, was die Klasse wirklich verstanden hat.');
+        upgrades.push('Nutze KI in der Sicherung lieber als Prüfpartner: Die Lernenden vergleichen ihre Lösung mit Kriterien.');
+      }
+
+      if (phase === 'bewertung') {
+        score -= 10;
+        risks.push('Bei bewerteten Leistungen muss klar sein, welche Eigenleistung zählt und wie KI-Nutzung transparent gemacht wird.');
+        upgrades.push('Arbeite mit Prozessnachweis, Reflexion, mündlicher Begründung oder Versionenvergleich.');
+        tags.push('Bewertung sensibel');
+      }
+
+      // Produkt
+      if (produkt === 'eigener_entwurf') {
+        score += 15;
+        reasons.push('Ein eigener Entwurf vor der KI-Nutzung schützt die Schülerleistung und macht Entwicklung sichtbar.');
+        tags.push('eigener Entwurf');
+      }
+
+      if (produkt === 'prozess') {
+        score += 18;
+        reasons.push('Prozessdokumentation und Reflexion passen sehr gut zu sinnvoller KI-Nutzung, weil nicht nur das Endprodukt zählt.');
+        tags.push('Prozess sichtbar');
+      }
+
+      if (produkt === 'vergleich') {
+        score += 12;
+        reasons.push('Der Vergleich mehrerer Lösungen fordert Urteilskraft statt bloßer Übernahme.');
+        tags.push('Urteilskraft');
+      }
+
+      if (produkt === 'ki_output') {
+        score -= 28;
+        risks.push('Wenn der KI-Output selbst das fertige Produkt ist, droht Ersatz der Schülerleistung.');
+        upgrades.push('Ändere das Produkt: Abgegeben wird nicht nur der Output, sondern Analyse, Überarbeitung und Begründung.');
+        toolShowSigns.push('Das Endprodukt sagt mehr über die KI aus als über das Verständnis der Schülerinnen und Schüler.');
+        tags.push('Output als Problem');
+      }
+
+      if (produkt === 'kein_produkt') {
+        score -= 12;
+        risks.push('Ohne sichtbares Produkt ist schwer erkennbar, ob tatsächlich gelernt wurde.');
+        upgrades.push('Ergänze ein kurzes Exit-Ticket, eine Begründung, einen Mini-Transfer oder eine Reflexion.');
+      }
+
+      // Sozialform
+      if (sozialform === 'partner' || sozialform === 'gruppe') {
+        score += 6;
+        reasons.push('Partner- oder Gruppenarbeit kann helfen, KI-Vorschläge zu diskutieren statt vorschnell zu übernehmen.');
+      }
+
+      if (sozialform === 'plenum' && eigenleistung !== 'hoch') {
+        score -= 6;
+        risks.push('Im Plenum besteht die Gefahr, dass wenige aktiv denken und viele nur zuschauen.');
+        upgrades.push('Baue vor der Plenumsphase eine kurze Einzel- oder Partnerdenkphase ein.');
+      }
+
+      // Sichtbare Schülerleistung
+      const visibleLabels = {
+        firstDraft: 'eigener Erstentwurf',
+        revision: 'markierte Überarbeitung',
+        explanation: 'Begründung von Änderungen',
+        reflection: 'Reflexion / Exit-Ticket',
+        comparison: 'Vergleich mit KI-Vorschlag',
+        decision: 'dokumentierte Entscheidungen',
+        intermediate: 'sichtbare Zwischenprodukte',
+        oral: 'mündliche Erklärung'
+      };
+
+      visible.forEach(v => {
+        score += 6;
+        visibleFeedback.push(visibleLabels[v]);
+        tags.push(visibleLabels[v]);
+      });
+
+      if (visible.length === 0) {
+        score -= 24;
+        risks.push('Die Schülerleistung ist noch nicht sichtbar genug. Das macht den Einsatz didaktisch und bei Bewertung problematisch.');
+        upgrades.push('Ergänze mindestens einen sichtbaren Nachweis: Erstentwurf, markierte Überarbeitung, Reflexion oder Begründung der Änderungen.');
+        toolShowSigns.push('Es bleibt unklar, was die Lernenden selbst gedacht, entschieden oder verbessert haben.');
+      } else if (!visible.includes('firstDraft') && (rolle === 'generator' || rolle === 'korrektur')) {
+        score -= 8;
+        risks.push('Ohne Erstentwurf kann die KI zu früh in die eigentliche Leistung eingreifen.');
+        upgrades.push('Lass vor der KI-Nutzung eine eigene erste Lösung erstellen, auch wenn sie kurz oder unvollständig ist.');
+      }
+
+      if (!visible.includes('decision') && (focus === 'entscheidung' || rolle === 'generator' || produkt === 'vergleich')) {
+        score -= 7;
+        risks.push('Entscheidungen sind noch nicht sichtbar genug: Was wurde übernommen, geändert oder verworfen?');
+        upgrades.push('Ergänze eine kurze Entscheidungsdokumentation: übernommen, geändert, verworfen, jeweils mit Begründung.');
+      }
+
+      if (!visible.includes('intermediate') && (phase === 'feedback' || produkt === 'prozess' || support === 'fading')) {
+        score -= 5;
+        risks.push('Ohne Zwischenprodukte ist der Lernfortschritt schwer nachvollziehbar.');
+        upgrades.push('Lass Versionen oder Zwischenschritte sichern: Version 1, KI-Hilfe, Version 2.');
+      }
+
+      if (!visible.includes('revision') && (rolle === 'feedback' || rolle === 'korrektur' || phase === 'feedback')) {
+        score -= 8;
+        risks.push('Feedback bleibt folgenlos, wenn keine Überarbeitung sichtbar eingefordert wird.');
+        upgrades.push('Verlange eine markierte Version 2: mindestens zwei Stellen verbessern und kurz begründen.');
+      }
+
+      // Leitplanken
+      const guidelineLabels = {
+        criteria: 'klare Kriterien',
+        transparent: 'transparente KI-Nutzung',
+        peer: 'Austausch geplant',
+        revision: 'Überarbeitung verpflichtend',
+        limits: 'KI-Grenzen formuliert',
+        teacher: 'Lehrkraft rahmt'
+      };
+
+      guidelines.forEach(g => {
+        score += 5;
+        tags.push(guidelineLabels[g]);
+      });
+
+      if (!guidelines.includes('criteria')) {
+        risks.push('Ohne Kriterien bleibt unklar, woran Qualität gemessen wird.');
+        upgrades.push('Ergänze 3 bis 5 klare Qualitätskriterien oder ein kleines Raster.');
+      }
+
+      if (!guidelines.includes('transparent')) {
+        risks.push('Wenn KI-Nutzung nicht sichtbar wird, ist Eigenleistung schwer einschätzbar.');
+        upgrades.push('Lass Prompt, KI-Hilfe und eigene Änderungen kurz dokumentieren.');
+      }
+
+      if (!guidelines.includes('peer')) {
+        booster.push('Peer-Booster: Plane einen kurzen Austausch ein: Welche KI-Hilfe war nützlich? Was habt ihr nicht übernommen? Warum?');
+      }
+
+      if (!guidelines.includes('revision')) {
+        risks.push('Ohne Überarbeitung bleibt Feedback oft folgenlos.');
+        upgrades.push('Verlange eine konkrete Änderung nach dem Feedback, z. B. mit der 3-Satz-Regel: Wir ändern ..., weil ..., das bedeutet ...');
+      }
+
+      if (!guidelines.includes('limits') && (rolle === 'generator' || phase === 'bewertung')) {
+        risks.push('Gerade hier braucht es klare Grenzen: Was darf die KI leisten, was müssen die Lernenden selbst leisten?');
+        upgrades.push('Formuliere eine klare No-Go-Regel: Die KI darf beraten, aber nicht das Endprodukt vollständig erstellen.');
+      }
+
+      if (!guidelines.includes('teacher') && phase === 'bewertung') {
+        risks.push('Bei Bewertung sollte die Lehrkraft die KI-Nutzung fachlich und organisatorisch klar rahmen.');
+        upgrades.push('Plane eine kurze mündliche Rückfrage oder einen Versionenvergleich ein.');
+      }
+
+      // Standard-Booster
+      booster.push('Selbstarbeits-Booster: Erst denken, dann KI. Die Schülerinnen und Schüler starten mit einer eigenen Idee, Lösung oder Vermutung.');
+      booster.push('Feedback-Booster: Die KI gibt keine fertige Lösung, sondern Rückfragen, Kriterienhinweise und Feed-forward.');
+      booster.push('Reflexions-Booster: Am Ende ein kurzes Exit-Ticket: Was habe ich durch KI-Feedback verbessert? Was habe ich nicht übernommen?');
+      booster.push('Fading-Booster: Plane bewusst eine Stelle ein, an der KI zurücktritt und die Lernenden ohne weitere KI-Hilfe entscheiden, anwenden oder präsentieren.');
+      booster.push('Entscheidungs-Booster: Nicht nur Ergebnis sichern, sondern auch die Auswahlentscheidung: Warum genau diese Lösung? Warum nicht der andere KI-Vorschlag?');
+
+      if (toolShowSigns.length === 0) {
+        toolShowSigns.push('Oberflächlich wird der KI-Einsatz vor allem dann, wenn KI-Output beeindruckt, aber keine eigene Lernhandlung sichtbar wird.');
+        toolShowSigns.push('Achte darauf, dass Produkt, Prozess und Reflexion nicht vollständig an die KI ausgelagert werden.');
+      }
+
+      score = Math.max(0, Math.min(100, score));
+
+      let level, cssClass, headline, summary, planningKnot;
+      if (score >= 90) {
+        level = 'Sehr sinnvoller KI-Einsatz';
+        cssClass = 'success';
+        headline = '✅ Sehr sinnvoller KI-Einsatz';
+        summary = 'Der Einsatz ist didaktisch stark angelegt, weil die KI Denkprozesse, Feedback oder Überarbeitung unterstützt und die Eigenleistung der Lernenden sichtbar bleibt.';
+        planningKnot = 'Der wichtigste nächste Schritt ist, die gute Grundidee möglichst klar zu operationalisieren: Was tun die Lernenden vor der KI, was genau macht die KI und was entsteht danach sichtbar?';
+      } else if (score >= 75) {
+        level = 'Sinnvoller KI-Einsatz';
+        cssClass = 'success';
+        headline = '✅ Sinnvoller KI-Einsatz';
+        summary = 'Der Einsatz unterstützt wahrscheinlich Lernen, weil die KI nicht einfach ersetzt, sondern Denkprozesse, Feedback oder Überarbeitung anstößt.';
+        planningKnot = 'Der wichtigste nächste Schritt ist, die gute Grundidee möglichst klar zu operationalisieren: Was tun die Lernenden vor der KI, was genau macht die KI und was entsteht danach sichtbar?';
+      } else if (score >= 45) {
+        level = 'Nachschärfen nötig';
+        cssClass = 'warning';
+        headline = '⚠️ Potenzial vorhanden, aber noch wacklig';
+        summary = 'Die Idee kann funktionieren, braucht aber klarere Leitplanken, mehr sichtbare Eigenleistung oder eine bessere Einbettung in den Lernprozess.';
+        planningKnot = 'Der didaktische Knackpunkt liegt darin, die KI stärker als Coach, Feedbackgeber oder Prüfpartner zu rahmen und die Schülerleistung sichtbarer zu machen.';
+      } else {
+        level = 'Ersatz- oder Oberflächlichkeitsrisiko';
+        cssClass = 'danger';
+        headline = '🚨 Achtung: Hier droht Ersatz der Schülerleistung';
+        summary = 'Der geplante Einsatz wirkt aktuell eher wie KI-Output statt Lernprozess. Die Lernenden brauchen eine aktivere Rolle.';
+        planningKnot = 'Der Einsatz sollte umgebaut werden: erst eigene Schülerleistung, dann begrenzte KI-Hilfe, danach sichtbare Überarbeitung und Begründung.';
+      }
+
+      if (reasons.length === 0) {
+        reasons.push('Der Einsatz ist nicht grundsätzlich ausgeschlossen, aber seine Lernwirksamkeit hängt stark von der methodischen Rahmung ab.');
+      }
+
+      if (risks.length === 0) {
+        risks.push('Das größte Restrisiko ist eine unkritische Übernahme von KI-Vorschlägen. Das sollte durch Kriterien und Reflexion abgesichert werden.');
+      }
+
+      if (upgrades.length === 0) {
+        upgrades.push('Halte fest, was die Schülerinnen und Schüler vor der KI-Nutzung selbst leisten und was sie nach dem KI-Feedback sichtbar verbessern.');
+      }
+
+      const beforeAI = makeBeforeAI(rolle, produkt, visible);
+      const duringAI = makeDuringAI(rolle, phase);
+      const afterAI = makeAfterAI(rolle, produkt, visible, phase);
+      const prompt = makeStudentPrompt(rolle, ziel, phase);
+      const personaPrompt = makePersonaPrompt(rolle, ziel, phase, focus, support, eigenleistung, produkt, guidelines, visible);
+      const teacherHint = makeTeacherHint(rolle, phase, produkt, eigenleistung, focus, support);
+      const rebuiltIdea = makeRebuiltIdea(ziel, rolle, produkt, visible);
+      const assessmentHint = makeAssessmentHint(phase, produkt, guidelines, visible, focus, support);
+
+      const zielText = ziel || 'nicht angegeben';
+
+      const teacherSummary =
+`Geplanter KI-Einsatz: ${zielText}
+Phase: ${phaseLabels[phase]}
+Fachlicher Schwerpunkt: ${focusLabels[focus]}
+KI-Unterstützung im Verlauf: ${supportLabels[support]}
+KI-Rolle: ${roleLabels[rolle]}
+Einschätzung: ${level} (${score}/100)
+
+Didaktischer Knackpunkt:
+${planningKnot}
+
+Vor der KI:
+${stripHtml(beforeAI)}
+
+Mit der KI:
+${stripHtml(duringAI)}
+
+Nach der KI:
+${stripHtml(afterAI)}
+
+Verbesserungsimpuls:
+${upgrades[0]}`;
+
+      window.latestSummary = teacherSummary;
+      window.latestPrompt = prompt;
+      window.latestPersonaPrompt = personaPrompt;
+
+      $('result').className = '';
+      $('result').innerHTML = `
+        <div class="verdict ${cssClass}">
+          <h2>${headline}</h2>
+          <p>${summary}</p>
+        </div>
+
+        <div class="score-wrap">
+          <div class="score-line">
+            <strong>Didaktischer Plausibilitätswert</strong>
+            <strong>${score}/100</strong>
+          </div>
+          <div class="bar"><div class="bar-fill" style="width:${score}%"></div></div>
+          <div class="chips">${unique(tags).slice(0, 10).map(t => `<span class="chip">${t}</span>`).join('')}</div>
+        </div>
+
+        <div class="section">
+          <h3>🎯 Didaktischer Knackpunkt</h3>
+          <div class="info-box purple">${planningKnot}</div>
+        </div>
+
+        <div class="section">
+          <h3>🧩 Planungsprinzip</h3>
+          <div class="info-box">
+            <p class="mini-heading">Hilfen öffnen, dann Eigenleistung sichern</p>
+            <ul>
+              ${planningPrinciples.length ? sentenceList(planningPrinciples, 4) : '<li>Lege bewusst fest, wann die KI unterstützt und wann sie zugunsten der Eigenleistung zurücktritt.</li><li>Die KI sollte Anstoß, Feedback, Gegenperspektive oder Visualisierung liefern, aber nicht ungerahmt das Endprodukt ersetzen.</li>'}
+            </ul>
+          </div>
+        </div>
+
+        <div class="section">
+          <h3>🔁 Aus deiner Idee wird ein Lernprozess</h3>
+          <div class="phase-grid">
+            <div class="phase-card"><strong>Vor der KI</strong>${beforeAI}</div>
+            <div class="phase-card"><strong>Mit der KI</strong>${duringAI}</div>
+            <div class="phase-card"><strong>Nach der KI</strong>${afterAI}</div>
+          </div>
+        </div>
+
+        <div class="section">
+          <h3>👀 Sichtbare Schülerleistung</h3>
+          <div class="info-box">
+            <p class="mini-heading">${visible.length ? 'Schon gut sichtbar:' : 'Noch nicht ausreichend sichtbar:'}</p>
+            <ul>
+              ${visible.length ? visibleFeedback.map(v => `<li>${v}</li>`).join('') : '<li>Ergänze mindestens einen Nachweis: Erstentwurf, markierte Überarbeitung, dokumentierte Entscheidung, Zwischenprodukt, Reflexion oder mündliche Erklärung.</li>'}
+            </ul>
+          </div>
+        </div>
+
+        <div class="section">
+          <h3>✅ Was daran lernwirksam sein kann</h3>
+          <ul>${sentenceList(reasons, 5)}</ul>
+        </div>
+
+        <div class="section">
+          <h3>⚠️ Risiken und Warnsignale</h3>
+          <div class="two-col">
+            <div class="info-box">
+              <p class="mini-heading">Risiken</p>
+              <ul>${sentenceList(risks, 5)}</ul>
+            </div>
+            <div class="info-box">
+              <p class="mini-heading">Typische Warnsignale</p>
+              <ul>${sentenceList(toolShowSigns, 4)}</ul>
+            </div>
+          </div>
+        </div>
+
+        <div class="section">
+          <h3>🛠️ So kannst du die Idee verbessern</h3>
+          <ul>${sentenceList(upgrades, 6)}</ul>
+          <div class="info-box">
+            <p class="mini-heading">Möglicher Umbau der Idee</p>
+            ${rebuiltIdea}
+          </div>
+        </div>
+
+        <div class="section">
+          <h3>🚀 Lernwirksamkeits-Booster</h3>
+          <ul>${sentenceList(booster, 4)}</ul>
+        </div>
+
+        <div class="section">
+          <h3>📋 Hinweis für Bewertung und Transparenz</h3>
+          <div class="info-box">${assessmentHint}</div>
+        </div>
+
+        <div class="section">
+          <h3>💬 Möglicher Schülerprompt</h3>
+          <div class="prompt-box">${prompt}</div>
+          <div class="button-row">
+            <button class="secondary" onclick="copyPrompt()">Schülerprompt kopieren</button>
+          </div>
+        </div>
+
+        <div class="section">
+          <h3>🤖 KI-Persona für den geplanten Einsatz</h3>
+          <div class="info-box">
+            Dieser Prompt ist für die Lehrkraft gedacht. Er kann in einen KI-Assistenten kopiert und für den konkreten Unterrichtseinsatz angepasst werden.
+          </div>
+          <div class="prompt-box">${personaPrompt}</div>
+          <div class="button-row">
+            <button class="secondary" onclick="copyPersonaPrompt()">KI-Persona-Prompt kopieren</button>
+          </div>
+        </div>
+
+        <div class="section">
+          <h3>🧑‍🏫 Kurzfassung für Planung</h3>
+          <div class="copy-box">${teacherSummary}</div>
+          <div class="info-box">
+            <p class="mini-heading">Lehrerhinweis</p>
+            ${teacherHint}
+          </div>
+        </div>
+
+        <div class="button-row">
+          <button class="secondary" onclick="copySummary()">Kurzfassung kopieren</button>
+          <button class="secondary" onclick="window.print()">Drucken / PDF</button>
+        </div>
+      `;
+    }
+
+    function makeBeforeAI(rolle, produkt, visible) {
+      if (visible.includes('firstDraft')) {
+        return 'Die Schülerinnen und Schüler erstellen zuerst einen eigenen Entwurf, eine Vermutung, eine Lösungsskizze oder erste Argumente. So bleibt sichtbar, was vor der KI bereits selbst gedacht wurde.';
+      }
+      if (rolle === 'generator') {
+        return 'Unbedingt ergänzen: Vor dem KI-Output brauchen die Lernenden eine eigene Ausgangsidee. Sonst übernimmt die KI zu früh den produktiven Teil.';
+      }
+      if (produkt === 'vergleich') {
+        return 'Die Lernenden formulieren zunächst eigene Kriterien oder eine erste Einschätzung, bevor sie KI-Vorschläge vergleichen.';
+      }
+      return 'Plane eine kurze Eigenarbeitsphase ein: Was wissen, vermuten oder können die Lernenden schon, bevor die KI dazukommt?';
+    }
+
+    function makeDuringAI(rolle, phase) {
+      const base = {
+        coach: 'Die KI stellt Rückfragen, gibt kleine Hilfen und erklärt dosiert. Sie liefert keine vollständige Lösung.',
+        feedback: 'Die KI prüft den Entwurf anhand klarer Kriterien und gibt Feed-forward: Was ist schon stark? Was sollte konkret überarbeitet werden?',
+        sparring: 'Die KI übernimmt eine Rolle, Gegenposition oder Gesprächssituation. Die Lernenden müssen reagieren, nachfragen und begründen.',
+        struktur: 'Die KI macht Ordnung, Kategorien oder Kriterien sichtbar. Die fachliche Entscheidung bleibt bei den Lernenden.',
+        generator: 'Die KI erzeugt Material nur als Vergleichs- oder Prüfgegenstand. Die Lernenden analysieren Qualität, Grenzen und Passung des Outputs.',
+        korrektur: 'Die KI markiert oder erklärt Fehler. Die Lernenden entscheiden selbst, welche Korrekturen übernommen werden, und begründen dies.',
+        recherche: 'Die KI hilft beim Sammeln erster Informationen. Danach müssen Quellen, Plausibilität und fehlender Kontext geprüft werden.'
+      };
+      if (phase === 'bewertung') {
+        return base[rolle] + ' Bei Bewertung muss die erlaubte KI-Hilfe besonders klar begrenzt werden.';
+      }
+      return base[rolle];
+    }
+
+    function makeAfterAI(rolle, produkt, visible, phase) {
+      if (visible.includes('revision') && visible.includes('decision')) {
+        return 'Die Lernenden erstellen eine sichtbare Version 2, markieren Änderungen und dokumentieren, was sie übernommen, verändert oder verworfen haben.';
+      }
+      if (visible.includes('revision')) {
+        return 'Die Lernenden erstellen eine sichtbare Version 2, markieren Änderungen und erklären mindestens eine Verbesserung.';
+      }
+      if (visible.includes('decision')) {
+        return 'Die Lernenden dokumentieren ihre Entscheidungen: Was wurde übernommen, verändert oder verworfen und warum?';
+      }
+      if (visible.includes('intermediate')) {
+        return 'Die Lernenden sichern Zwischenprodukte, damit der Weg vom eigenen Versuch über KI-Hilfe zur Endfassung nachvollziehbar wird.';
+      }
+      if (visible.includes('explanation')) {
+        return 'Die Lernenden begründen, welche KI-Hinweise sie übernommen, verändert oder bewusst verworfen haben.';
+      }
+      if (produkt === 'ki_output') {
+        return 'Nicht beim KI-Output stehen bleiben: Die Lernenden müssen analysieren, bewerten, überarbeiten oder eine eigene Version daraus entwickeln.';
+      }
+      if (phase === 'sicherung') {
+        return 'Die Klasse sichert nicht den KI-Text, sondern die eigenen Erkenntnisse: Was gilt? Warum? Woran erkennen wir Qualität?';
+      }
+      return 'Am Ende sollte ein sichtbarer Lernnachweis entstehen: Überarbeitung, Reflexion, Vergleich, kurze Begründung oder Exit-Ticket.';
+    }
+
+    function makePersonaPrompt(rolle, ziel, phase, focus, support, eigenleistung, produkt, guidelines, visible) {
+      const task = ziel ? ziel : '[Aufgabe / Unterrichtsziel hier konkret einfügen]';
+
+      const roleNames = {
+        coach: 'Lerncoach',
+        feedback: 'Feedbackcoach',
+        sparring: 'Sparringspartner',
+        struktur: 'Strukturcoach',
+        generator: 'Beispielgeber und Prüfmaterial-Ersteller',
+        korrektur: 'Korrektur- und Erklärcoach',
+        recherche: 'Recherche- und Quellencheck-Coach'
+      };
+
+      const focusInstructions = {
+        sprache: 'Achte besonders darauf, dass die Sprachproduktion der Schülerinnen und Schüler sichtbar bleibt. Formuliere nicht einfach alles fertig, sondern gib sprachliche Hinweise, Rückfragen, Alternativen und kurze Erklärungen.',
+        entscheidung: 'Achte besonders darauf, dass fachliche Entscheidungen sichtbar werden. Fordere Begründungen ein und frage nach, was übernommen, verändert oder verworfen wird.',
+        recherche: 'Achte besonders auf Quellenkritik, Plausibilität und fehlenden Kontext. Unterscheide gesicherte Informationen, unsichere Aussagen und offene Fragen.',
+        visualisierung: 'Achte darauf, dass Visualisierungen fachlich begründet werden. Erzeuge nicht nur schöne Produkte, sondern hilf, die dahinterliegende Idee sichtbar zu machen.',
+        feedback: 'Achte besonders auf konkretes Feedback und Feed-forward. Das Ziel ist eine bessere Version durch Überarbeitung, nicht eine fertige Musterlösung.',
+        verstehen: 'Achte darauf, dass die Lernenden erklären und anwenden. Gib nicht sofort Lösungen, sondern prüfe Verständnis durch Rückfragen und kleine Anwendungsschritte.'
+      };
+
+      const supportInstructions = {
+        punktuell: 'Setze KI-Hilfe nur punktuell ein. Unterstütze an einer klar begrenzten Stelle und gib die Verantwortung danach wieder an die Lernenden zurück.',
+        fading: 'Arbeite mit abnehmender Hilfe. Unterstütze anfangs stärker, ziehe dich dann schrittweise zurück und fordere eigenständige Entscheidungen ein.',
+        durchgehend: 'Die Lehrkraft hat eine durchgehende KI-Begleitung vorgesehen. Achte deshalb besonders darauf, die Eigenleistung nicht zu überdecken und immer wieder Phasen ohne fertige KI-Lösung einzubauen.',
+        unklar: 'Hilf dabei, die KI-Rolle im Verlauf zu klären. Frage nach, wann du unterstützen sollst und wann die Lernenden ohne weitere KI-Hilfe weiterarbeiten sollen.'
+      };
+
+      const eigenleistungInstructions = {
+        hoch: 'Fordere einen hohen eigenen Denk- und Arbeitsanteil ein: prüfen, begründen, vergleichen, überarbeiten und reflektieren.',
+        mittel: 'Erhöhe den eigenen Denk- und Arbeitsanteil, indem du nicht nur Auswahl oder Anpassung zulässt, sondern immer auch eine kurze Begründung einforderst.',
+        gering: 'Achte besonders darauf, nicht den eigenen Denk- und Arbeitsanteil der Lernenden zu ersetzen. Stelle Rückfragen und gib Hilfen, aber liefere keine fertige Endlösung.'
+      };
+
+      const visibleMap = {
+        firstDraft: 'Die Lernenden sollen zuerst einen eigenen Erstentwurf oder eine eigene Lösungsidee erstellen.',
+        revision: 'Die Lernenden sollen nach deinem Feedback eine sichtbare Überarbeitung erstellen.',
+        explanation: 'Die Lernenden sollen begründen, was sie übernommen, geändert oder verworfen haben.',
+        reflection: 'Die Lernenden sollen am Ende kurz reflektieren, was ihnen geholfen hat und was sie selbst verbessert haben.',
+        comparison: 'Die Lernenden sollen ihre eigene Lösung mit einem KI-Vorschlag vergleichen.',
+        decision: 'Die Lernenden sollen Entscheidungen dokumentieren: übernommen, geändert, verworfen.',
+        intermediate: 'Zwischenprodukte oder Versionen sollen sichtbar bleiben.',
+        oral: 'Die Lernenden sollen ihre Entscheidung mündlich erklären können.'
+      };
+
+      const guidelineMap = {
+        criteria: 'Arbeite mit klaren Kriterien und beziehe dein Feedback darauf.',
+        transparent: 'Mach die KI-Hilfe transparent: Die Lernenden sollen festhalten, welche Hilfe sie genutzt haben.',
+        peer: 'Bereite Ergebnisse so auf, dass sie mit Partner, Gruppe oder Plenum besprochen werden können.',
+        revision: 'Fordere eine Überarbeitung ein. Feedback soll nicht folgenlos bleiben.',
+        limits: 'Liefere keine vollständige Endlösung, wenn dadurch die Eigenleistung ersetzt würde.',
+        teacher: 'Bleibe innerhalb der Vorgaben der Lehrkraft und verweise bei Unsicherheit auf eine Klärung mit der Lehrkraft.'
+      };
+
+      const visibleLines = visible.length
+        ? visible.map(v => '- ' + visibleMap[v]).join('\n')
+        : '- Mache die Eigenleistung sichtbar, z. B. durch Erstentwurf, Überarbeitung, Begründung oder Reflexion.';
+
+      const guidelineLines = guidelines.length
+        ? guidelines.map(g => '- ' + guidelineMap[g]).join('\n')
+        : '- Gib keine fertige Endlösung. Unterstütze den Lernprozess und fordere eigene Entscheidungen ein.';
+
+      const prompt =
+`Du bist eine KI-Persona für den Unterricht und arbeitest als ${roleNames[rolle]}.
+
+Unterrichtsziel / Aufgabe:
+${task}
+
+Unterrichtsphase:
+${phaseLabels[phase]}
+
+Fachlicher Schwerpunkt:
+${focusLabels[focus]}
+
+Deine Grundregel:
+Du unterstützt den Lernprozess, ersetzt aber nicht den eigenen Denk- und Arbeitsanteil der Schülerinnen und Schüler. Gib keine ungerahmte fertige Endlösung. Hilf so, dass Denken, Entscheiden, Überarbeiten und Begründen sichtbar bleiben.
+
+Deine Rolle:
+${makePersonaRoleInstruction(rolle)}
+
+Worauf du besonders achten sollst:
+${focusInstructions[focus]}
+
+KI-Unterstützung im Verlauf:
+${supportInstructions[support]}
+
+Eigener Denk- und Arbeitsanteil:
+${eigenleistungInstructions[eigenleistung]}
+
+Sichtbare Schülerleistung:
+${visibleLines}
+
+Leitplanken:
+${guidelineLines}
+
+Arbeitsweise:
+- Stelle zuerst höchstens eine kurze Rückfrage, wenn wichtige Informationen fehlen.
+- Arbeite schrittweise und knapp.
+- Gib konkrete Hinweise, aber nimm den Lernenden nicht die vollständige Lösung ab.
+- Fordere Begründungen ein: Warum wurde etwas übernommen, verändert oder verworfen?
+- Wenn du Beispiele gibst, kennzeichne sie als Beispiel oder Übungsmaterial.
+- Schließe mit einem kurzen nächsten Schritt für die Lernenden.
+
+Starte jetzt mit einer kurzen, freundlichen Arbeitsanweisung an die Schülerinnen und Schüler.`;
+
+      return escapeHtml(prompt);
+    }
+
+    function makePersonaRoleInstruction(rolle) {
+      const instructions = {
+        coach: 'Stelle Rückfragen, gib kleine Hilfen und erkläre dosiert. Führe die Lernenden nicht zur fertigen Lösung, sondern zum nächsten eigenen Denkschritt.',
+        feedback: 'Prüfe Entwürfe anhand der Kriterien. Gib Feedback und Feed-forward: Was ist gelungen, was sollte verbessert werden, was ist der nächste konkrete Überarbeitungsschritt?',
+        sparring: 'Übernimm eine passende Rolle, Gegenposition oder kritische Perspektive. Fordere die Lernenden heraus, genauer zu begründen und ihre Idee zu verbessern.',
+        struktur: 'Hilf beim Ordnen von Gedanken, Kriterien oder Arbeitsschritten. Die fachliche Entscheidung bleibt bei den Lernenden.',
+        generator: 'Erzeuge nur Beispielmaterial oder Vergleichsmaterial. Der Output ist nicht die fertige Schülerlösung, sondern wird geprüft, bewertet und überarbeitet.',
+        korrektur: 'Markiere und erkläre wichtige Fehler oder schwache Stellen. Verbessere nicht einfach alles fertig, sondern hilf den Lernenden, selbst zu überarbeiten.',
+        recherche: 'Hilf beim Sammeln und Ordnen erster Informationen. Weise auf Unsicherheiten, fehlenden Kontext und notwendige Quellenprüfung hin.'
+      };
+      return instructions[rolle];
+    }
+
+    function makeStudentPrompt(rolle, ziel, phase) {
+      const task = ziel ? `Mein Ziel / meine Aufgabe: ${ziel}` : 'Mein Ziel / meine Aufgabe: [hier Aufgabe einfügen]';
+
+      const prompts = {
+        coach:
+`Du bist mein Lerncoach. Gib mir keine fertige Lösung.
+${task}
+
+Stelle mir zuerst eine Rückfrage, wenn etwas unklar ist.
+Hilf mir dann Schritt für Schritt mit kurzen Hinweisen.
+Wenn ich Fehler mache, korrigiere mich freundlich und erkläre kurz, warum.
+Am Ende nenne mir einen konkreten nächsten Schritt.`,
+
+        feedback:
+`Du bist mein Feedbackcoach. Gib mir keine fertige Musterlösung.
+${task}
+
+Prüfe meinen Entwurf nach diesen Punkten:
+1. Was ist schon gelungen?
+2. Was ist noch unklar, unvollständig oder nicht gut begründet?
+3. Was soll ich als Nächstes konkret verbessern?
+
+Formuliere dein Feedback freundlich, aber klar. Gib mir am Ende einen Feed-forward-Hinweis für meine Überarbeitung.`,
+
+        sparring:
+`Du bist mein Sparringspartner. Gib mir keine fertige Lösung.
+${task}
+
+Übernimm eine passende Gegenposition oder Rolle.
+Stelle kritische Rückfragen zu meiner Idee.
+Hilf mir, meine Begründung stärker, genauer und überzeugender zu machen.
+Am Ende fasse zusammen, welche Stelle ich verbessern sollte.`,
+
+        struktur:
+`Du bist meine Strukturhilfe. Erstelle kein fertiges Endprodukt.
+${task}
+
+Hilf mir, meine Gedanken zu ordnen.
+Schlage sinnvolle Kategorien oder Kriterien vor.
+Frage mich danach, welche Punkte ich selbst ergänzen, streichen oder umsortieren würde.
+Am Ende soll ich selbst entscheiden und begründen.`,
+
+        generator:
+`Du darfst ein Beispiel oder einen möglichen KI-Output erzeugen, aber nicht meine fertige Lösung ersetzen.
+${task}
+
+Erstelle ein Beispiel, das ich kritisch prüfen kann.
+Danach stelle mir Fragen:
+Was ist gelungen?
+Was ist zu allgemein?
+Was passt nicht zur Aufgabe?
+Was müsste ich selbst ändern oder besser machen?`,
+
+        korrektur:
+`Du bist mein Korrektur- und Erklärcoach. Verbessere nicht einfach alles automatisch.
+${task}
+
+Markiere wichtige Fehler oder schwache Stellen.
+Erkläre kurz, warum sie problematisch sind.
+Gib mir keine komplette fertige Endversion.
+Ich soll die Überarbeitung selbst durchführen und danach begründen, was ich geändert habe.`,
+
+        recherche:
+`Du bist meine Recherchehilfe. Gib mir keine ungeprüfte fertige Antwort.
+${task}
+
+Sammle erste Informationen und nenne, was daran noch geprüft werden muss.
+Unterscheide zwischen gesicherten Informationen, Vermutungen und offenen Fragen.
+Erinnere mich daran, Quellen zu vergleichen und fehlenden Kontext zu prüfen.`
+      };
+
+      let prompt = prompts[rolle];
+
+      if (phase === 'bewertung') {
+        prompt += '\n\nWichtig: Da es um eine bewertete Leistung gehen kann, darfst du nur beraten, erklären oder Feedback geben. Du darfst meine eigentliche Leistung nicht vollständig erstellen.';
+      }
+
+      return escapeHtml(prompt);
+    }
+
+    function makeTeacherHint(rolle, phase, produkt, eigenleistung, focus, support) {
+      const hints = [];
+
+      if (rolle === 'generator') {
+        hints.push('Den Generator nicht als Produktmaschine einsetzen, sondern als Material, an dem Qualität, Grenzen und Passung geprüft werden.');
+      }
+
+      if (phase === 'feedback') {
+        hints.push('Die stärkste Lernchance liegt in der Überarbeitung. Plane daher Version 1, KI-Feedback und Version 2 sichtbar ein.');
+      }
+
+      if (phase === 'bewertung') {
+        hints.push('Bei Bewertung zählen vor allem Eigenleistung, Begründung, Überarbeitung und Reflexion. Der KI-Anteil muss transparent sein.');
+      }
+
+      if (produkt === 'ki_output') {
+        hints.push('Das Produkt sollte umgebaut werden: Nicht der KI-Output ist die Leistung, sondern Analyse, Auswahl, Verbesserung und fachliche Begründung.');
+      }
+
+      if (eigenleistung === 'gering') {
+        hints.push('Die Planung braucht mehr Schüleraktivität. Gute Minimalstruktur: erst eigener Versuch, dann KI-Hinweis, dann begründete Überarbeitung.');
+      }
+
+      if (focus === 'sprache') {
+        hints.push('Im Sprachunterricht sollte sichtbar bleiben, welche Sprache von den Lernenden selbst kommt. KI daher eher als Feedback- oder Übungspartner nutzen.');
+      }
+
+      if (support === 'durchgehend' || support === 'unklar') {
+        hints.push('Plane genauer, wann KI-Hilfe endet. Lernwirksam wird der Einsatz vor allem, wenn Unterstützung nicht dauerhaft die Eigenleistung überdeckt.');
+      }
+
+      if (hints.length === 0) {
+        hints.push('Die Planung wirkt grundsätzlich tragfähig. Besonders wichtig bleibt, dass die KI-Rolle eng beschrieben und die Schülerleistung sichtbar dokumentiert wird.');
+      }
+
+      return `<ul>${sentenceList(hints, 5)}</ul>`;
+    }
+
+    function makeRebuiltIdea(ziel, rolle, produkt, visible) {
+      const task = ziel || 'die Aufgabe';
+      if (rolle === 'generator' || produkt === 'ki_output') {
+        return `Aus „Die KI erstellt das Ergebnis“ wird: Die Schülerinnen und Schüler bearbeiten zuerst selbst ${escapeHtml(task)}. Danach erzeugt die KI ein Beispiel oder gibt Feedback. Die Lernenden vergleichen, überarbeiten und begründen sichtbar, was sie übernehmen, ändern oder verwerfen.`;
+      }
+      if (rolle === 'feedback' || visible.includes('revision')) {
+        return `Die Schülerinnen und Schüler erstellen zunächst eine eigene Version zu ${escapeHtml(task)}. Die KI gibt kriteriales Feedback. Anschließend entsteht eine überarbeitete Version mit kurzer Begründung der wichtigsten Änderung.`;
+      }
+      if (rolle === 'sparring') {
+        return `Die KI wird als Gesprächspartner oder Gegenposition eingesetzt. Die Schülerinnen und Schüler müssen reagieren, nachfragen, ihre Position begründen und nach dem Gespräch eine verbesserte Fassung festhalten.`;
+      }
+      if (rolle === 'recherche') {
+        return `Die KI liefert nur einen ersten Überblick. Die Schülerinnen und Schüler prüfen Quellen, markieren offene Fragen und formulieren eine eigene, belegte Einschätzung.`;
+      }
+      return `Die Idee wird lernwirksamer, wenn sie nach dem Muster läuft: eigener Denkversuch, begrenzte KI-Hilfe, sichtbare Überarbeitung, kurze Reflexion.`;
+    }
+
+    function makeAssessmentHint(phase, produkt, guidelines, visible, focus, support) {
+      const points = [];
+
+      if (phase === 'bewertung') {
+        points.push('Bei bewerteten Leistungen sollte nicht der KI-Output allein bewertet werden, sondern die sichtbare fachliche Eigenleistung.');
+      } else {
+        points.push('Auch ohne Bewertung hilft Transparenz: Die Lernenden sollten kurz zeigen, wie die KI genutzt wurde und was sie selbst verändert haben.');
+      }
+
+      if (!guidelines.includes('transparent')) {
+        points.push('Ergänze eine kurze Dokumentation: verwendeter Prompt, Art der KI-Hilfe, eigene Änderungen.');
+      }
+
+      if (visible.includes('firstDraft') && visible.includes('revision')) {
+        points.push('Sehr geeignet ist ein Versionenvergleich: Version 1 vor KI, KI-Hinweise, Version 2 nach Überarbeitung.');
+      } else {
+        points.push('Für mehr Fairness und Klarheit: Erstentwurf und Überarbeitung sichtbar machen.');
+      }
+
+      if (!guidelines.includes('criteria')) {
+        points.push('Lege vorher Kriterien fest, damit Feedback und Bewertung nicht beliebig wirken.');
+      }
+
+      if (focus === 'sprache') {
+        points.push('Bei Sprachleistungen sollte erkennbar bleiben, welche Formulierungsleistung die Lernenden selbst erbracht haben.');
+      }
+
+      if (support === 'durchgehend') {
+        points.push('Bei dauerhaftem KI-Einsatz sollte mindestens eine Phase ohne weitere KI-Hilfe eingeplant werden.');
+      }
+
+      points.push('Mündliche Nachfragen oder kurze Reflexionen helfen, echte Eigenleistung von bloßer Übernahme zu unterscheiden.');
+
+      return `<ul>${sentenceList(points, 6)}</ul>`;
+    }
+
+    function stripHtml(text) {
+      const div = document.createElement('div');
+      div.innerHTML = text;
+      return div.textContent || div.innerText || '';
+    }
+
+    function escapeHtml(str) {
+      return String(str)
+        .replace(/&/g, '&amp;')
+        .replace(/</g, '&lt;')
+        .replace(/>/g, '&gt;')
+        .replace(/"/g, '&quot;')
+        .replace(/'/g, '&#039;');
+    }
+
+    function copyPersonaPrompt() {
+      if (!window.latestPersonaPrompt) return;
+      const temp = document.createElement('textarea');
+      temp.innerHTML = window.latestPersonaPrompt;
+      const decoded = temp.value;
+      navigator.clipboard.writeText(decoded).then(() => {
+        alert('KI-Persona-Prompt wurde kopiert.');
+      }).catch(() => {
+        alert('Kopieren ist in diesem Browser nicht möglich. Du kannst den Text manuell markieren.');
+      });
+    }
+
+    function copySummary() {
+      if (!window.latestSummary) return;
+      navigator.clipboard.writeText(window.latestSummary).then(() => {
+        alert('Kurzfassung wurde kopiert.');
+      }).catch(() => {
+        alert('Kopieren ist in diesem Browser nicht möglich. Du kannst den Text manuell markieren.');
+      });
+    }
+
+    function copyPrompt() {
+      if (!window.latestPrompt) return;
+      const temp = document.createElement('textarea');
+      temp.innerHTML = window.latestPrompt;
+      const decoded = temp.value;
+      navigator.clipboard.writeText(decoded).then(() => {
+        alert('Schülerprompt wurde kopiert.');
+      }).catch(() => {
+        alert('Kopieren ist in diesem Browser nicht möglich. Du kannst den Text manuell markieren.');
+      });
+    }
+
+    function resetForm() {
+      $('ziel').value = '';
+      $('focus').value = 'sprache';
+      $('support').value = 'punktuell';
+      $('phase').value = 'einstieg';
+      $('sozialform').value = 'einzel';
+      $('rolle').value = 'coach';
+      $('eigenleistung').value = 'hoch';
+      $('produkt').value = 'eigener_entwurf';
+
+      document.querySelectorAll('input[type="checkbox"]').forEach(cb => cb.checked = false);
+      document.querySelector('input[name="guideline"][value="criteria"]').checked = true;
+      document.querySelector('input[name="guideline"][value="revision"]').checked = true;
+      document.querySelector('input[name="visible"][value="firstDraft"]').checked = true;
+      document.querySelector('input[name="visible"][value="revision"]').checked = true;
+
+      $('result').className = 'result-empty';
+      $('result').innerHTML = 'Fülle links die Felder aus und klicke auf „Einsatz einschätzen“. Danach erhältst du Ampel, Begründung, Planungsfeedback, einen möglichen Schülerauftrag und konkrete Umbauvorschläge.';
+      window.latestSummary = '';
+      window.latestPrompt = '';
+      window.latestPersonaPrompt = '';
+    }
+  </script>
+</body>
+</html>
